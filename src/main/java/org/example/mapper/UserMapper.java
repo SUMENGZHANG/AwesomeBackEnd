@@ -10,9 +10,17 @@ import org.springframework.context.annotation.Bean;
 @Mapper
 public interface UserMapper {
 
-     User list();
+     User getAllUsers();
 
-     User getUserInfo(String name);
+     User getUserByEmail(String email);
 
-     boolean insertUser(User user);
+     boolean checkUser(User user);
+
+     User insertUser(User user);
+
+     boolean deleteUser(User user);
+
+     User getUserByName(String username);
+
+
 }

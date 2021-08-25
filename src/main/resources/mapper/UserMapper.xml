@@ -16,20 +16,32 @@ statement 描述 即待执行的 sql
 字符串拼接形式 无法避免 sql 注入
 -->
 <mapper namespace="org.example.mapper.UserMapper">
-    <insert id="insertUser" parameterType="org.example.pojo.User">
-        INSERT INTO student
-        (name,age)
-        VALUES
-        (#{name},#{age})
-    </insert>
 
-    <select id="list" resultType="org.example.pojo.User">
-       SELECT * FROM student WHERE id =1
+    <resultMap id="userMap" type="org.example.pojo.User">
+        <result column="first_name" property="firstName"/>
+        <result column="last_name" property="lastName"/>
+        <result column="user_name" property="userName"/>
+        <result column="email" property="email"/>
+        <result column="role_id" property="roleId"/>
+        <result column="role_name" property="roleName"/>
+        <result column="age" property="age"/>
+    </resultMap>
 
+    <select id="getAllUsers" resultMap="userMap">
+        SELECT * FROM users;
     </select>
 
-    <select id="getUserInfo" parameterType="string" resultType="org.example.pojo.User">
-       SELECT * FROM student WHERE name = #{name}
+    <select id="getUserByEmail" parameterType="string" resultType="org.example.pojo.User">
+        SELECT * FROM users WHERE email = #{email}
+    </select>
+
+    <insert id="insertUser" parameterType="org.example.pojo.User">
+        INSERT INTO users(first_name,last_name, user_name, email, role_id, role_name, age)
+        VALUES (#{firstName}, #{lastName}, #{userName}, #{email}, #{roleId}, #{roleName}, #{age});
+    </insert>
+
+    <select id="checkUser" parameterMap="org.example.pojo.User">
+        SELECT * FROM users WHERE email = #{email} AND password = #{password}
     </select>
 
 

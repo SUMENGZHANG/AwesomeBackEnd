@@ -26,30 +26,33 @@ public class UserService {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    public User list(){
-        return userMapper.list();
+    public User getAllUsers(){
+        return userMapper.getAllUsers();
     }
 
     public User getUserInfo(User user){
-        User curUser ;
-        if(redisTemplate.hasKey(""+user.getId())){
-
-
-            return  (User)redisTemplate.opsForValue().get(""+user.getId());
+        User curUser;
+        if(redisTemplate.hasKey(""+user.getEmail())){
+            return (User)redisTemplate.opsForValue().get(""+user.getEmail());
         }else{
-             curUser  = userMapper.getUserInfo(user.getName());
-            
-            redisTemplate.opsForValue().set(""+curUser.getId(),curUser);
-            redisTemplate.expire(""+curUser.getId(),1000, TimeUnit.SECONDS);
-
+            curUser = userMapper.getUserByEmail(user.getEmail());
+            if (curUser != null) {
+                redisTemplate.opsForValue().set(""+curUser.getEmail(),curUser);
+                redisTemplate.expire(""+curUser.getEmail(),1000, TimeUnit.SECONDS);
+            }
         }
-
-
         return curUser;
     }
 
     public boolean insertUser(User user){
-        redisTemplate.opsForValue().set(""+user.getId(),user.getName());
-        return userMapper.insertUser(user);
+        // already registered account
+        if (redisTemplate.hasKey(""+user.getEmail())) return false;
+        User existUser = userMapper.getUserByEmail(user.getEmail());
+        if (existUser != null) return false;
+        // Firstly, insert user in mysql. Then flush the user info to redis.
+        userMapper.insertUser(user);
+        redisTemplate.opsForValue().set(""+user.getEmail(),user);
+        redisTemplate.expire(""+user.getEmail(), 1000, TimeUnit.SECONDS);
+        return true;
     }
 }
