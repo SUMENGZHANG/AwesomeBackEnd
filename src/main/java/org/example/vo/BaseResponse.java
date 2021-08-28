@@ -14,7 +14,7 @@ public class BaseResponse<T> implements Serializable {
 
     String msg;
 
-    Boolean success;
+//    Boolean success;
 
     protected T data;
 

@@ -2,10 +2,13 @@ package org.example.enums;
 
 public enum ErrorCode {
 
-    SUCCESS(200, "success"),
+    QUERY_SUCCESS(201, "query success"),
+    INSERT_SUCCESS(202, "insert success"),
+    UPDATE_SUCCESS(203, "update success"),
+    DELETE_SUCCESS(204, "delete success"),
 
-    USER_ALREADY_REGISTERED(204, "user already registered"),
-    USER_NOT_FOUND(205, "user not found"),
+    USER_ALREADY_REGISTERED(205, "user already registered"),
+    USER_NOT_FOUND(206, "user not found"),
     ;
 
 
