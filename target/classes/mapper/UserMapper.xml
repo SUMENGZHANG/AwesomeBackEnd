@@ -16,21 +16,54 @@ statement 描述 即待执行的 sql
 字符串拼接形式 无法避免 sql 注入
 -->
 <mapper namespace="org.example.mapper.UserMapper">
+
+    <resultMap id="userMap" type="org.example.pojo.User">
+        <result property="id" column="id"/>
+        <result property="firstName" column="first_name"/>
+        <result property="lastName" column="last_name"/>
+        <result property="userName" column="user_name"/>
+        <result property="email" column="email" />
+        <result property="roleId" column="role_id" />
+        <result property="roleName" column="role_name" />
+        <result property="age" column="age" />
+        <result property="password" column="password" />
+    </resultMap>
+
+    <select id="getAllUsers" resultMap="userMap">
+        SELECT * FROM users;
+    </select>
+
+    <select id="getUserByEmail" parameterType="string" resultMap="userMap">
+        SELECT * FROM users WHERE email = #{email}
+    </select>
+
     <insert id="insertUser" parameterType="org.example.pojo.User">
-        INSERT INTO student
-        (name,age)
-        VALUES
-        (#{name},#{age})
+        INSERT INTO users(first_name,last_name, user_name, email, role_id, role_name, age, password)
+        VALUES (#{firstName}, #{lastName}, #{userName}, #{email}, #{roleId}, #{roleName}, #{age}, #{password});
     </insert>
 
-    <select id="list" resultType="org.example.pojo.User">
-       SELECT * FROM student WHERE id =1
+    <insert id="updateUser" parameterType="org.example.pojo.User">
+        UPDATE users
+        <set>
+            <if test="firstName != null and firstName != ''">`first_name` = #{password},</if>
+            <if test="lastName != null and lastName != ''">`last_name` = #{lastName},</if>
+            <if test="userName != null and userName != ''">`user_name` = #{userName},</if>
+            <if test="roleId != 0">`role_id` = #{roleId},</if>
+            <choose>
+                <when test="roleId == 1">`role_name` = 'admin',</when>
+                <when test="roleId == 2">`role_name` = 'employee',</when>
+                <when test="roleId == 3">`role_name` = 'normal',</when>
+            </choose>
+            <if test="age != null">`age` = #{age},</if>
+            <if test="password != null and password != ''">`password` = #{password}</if>
+        </set>
+        WHERE email = #{email}
+    </insert>
 
-    </select>
-
-    <select id="getUserInfo" parameterType="string" resultType="org.example.pojo.User">
-       SELECT * FROM student WHERE name = #{name}
-    </select>
+    <delete id="deleteUser" parameterType="org.example.pojo.User">
+        DELETE FROM users
+        WHERE `email` = #{email}
+    </delete>
 
 
 </mapper>
