@@ -8,11 +8,5 @@
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://192.45.38.52:3306/test</jdbc-url>
     </data-source>
-    <data-source source="LOCAL" name="student@119.45.38.52" uuid="a81f2adb-ce8b-4406-8601-2e0e380b1411">
-      <driver-ref>mysql.8</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://119.45.38.52:3306/student</jdbc-url>
-    </data-source>
   </component>
 </project>
